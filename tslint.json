@@ -2,7 +2,10 @@
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
+  "extends": ["angular-tslint-rules"],
   "rules": {
+    "array-type": false,
+    "align": [true, "statements"],
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
@@ -16,6 +19,7 @@
     },
     "eofline": true,
     "forin": true,
+    "i18n": false,
     "import-blacklist": [
       true,
       "rxjs/Rx"
@@ -27,24 +31,19 @@
     ],
     "interface-over-type-literal": true,
     "label-position": true,
-    "max-line-length": [
-      true,
-      140
-    ],
+    "max-file-line-count": false,
+    "max-line-length": false,
     "member-access": false,
     "member-ordering": [
       true,
-      {
-        "order": [
-          "static-field",
-          "instance-field",
-          "static-method",
-          "instance-method"
-        ]
-      }
+      "variables-before-functions"
     ],
+    "MissingTranslation": false,
+    "newline-before-return": false,
+    "newline-per-chained-call": false,
+    "no-angle-bracket-type-assertion": false,
     "no-arg": true,
-    "no-bitwise": true,
+    "no-bitwise": false,
     "no-console": [
       true,
       "debug",
@@ -59,12 +58,14 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
+    "no-implicit-dependencies": false,
     "no-inferrable-types": [
       true,
       "ignore-params"
     ],
     "no-misused-new": true,
     "no-non-null-assertion": true,
+    "no-null-keyword": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
@@ -82,7 +83,11 @@
       "check-else",
       "check-whitespace"
     ],
-    "prefer-const": true,
+    "ordered-imports": false,
+    "prefer-conditional-expression": false,
+    "prefer-const": false,
+    "prefer-object-spread": false,
+    "prefer-template": [true, "allow-single-concat"],
     "quotemark": [
       true,
       "single"
@@ -116,7 +121,9 @@
       "check-separator",
       "check-type"
     ],
-    "no-output-on-prefix": true,
+    "directive-selector": [true, "attribute", "app", "camelCase"],
+    "component-selector": [true, "element", "app", "kebab-case"],
+    "no-output-on-prefix": false,
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
