@@ -1,23 +1,39 @@
+import { Predicate } from '@angular/core';
 import { IncomingMessage, ServerResponse, ClientRequest } from "http";
-import { Scope } from "./scope";
-const modifyResponse = require('node-http-proxy-json');
+import { Scope, MockResponse } from "./scope";
+import * as modifyResponse from 'node-http-proxy-json';
 
-
-export function onResponse(proxyRes: IncomingMessage, req: IncomingMessage, res: ServerResponse): void {
-    if(this.shouldMock(req)) {
-        return this.mockResponse(res, proxyRes);
-    }
+export function onResponse(proxyRes: IncomingMessage, request: IncomingMessage, response: ServerResponse): void {
+    let mock = Scope.mockResponses.find(m => shouldMockResponse(request, m));
+    match(mock).on(isNotUndefined, mockResponse, [response, proxyRes, mock]);
 }
-export function onRequest(proxyRes: ClientRequest, req: IncomingMessage, res: ServerResponse): void {}
+export function onRequest(proxyRes: ClientRequest, request: IncomingMessage, response: ServerResponse): void {}
 
-function shouldMock(api: IncomingMessage): boolean {
-    return !!Scope.mockResponse && api.method === Scope.mockResponse.method && Scope.mockResponse.url.test(api.url);
+function shouldMockResponse(api: IncomingMessage, mock: MockResponse): boolean {
+    return api.method === mock.httpMethod && mock.url.test(api.url);
 }
-function mockResponse(res: ServerResponse, proxyRes: IncomingMessage) {
-    return modifyResponse(res, proxyRes, body => {
+
+function isNotUndefined(value: any): boolean {
+    return !(typeof value === 'undefined');
+}
+
+function mockResponse(res: ServerResponse, proxyRes: IncomingMessage, mock: MockResponse) {
+    delete proxyRes.headers['content-length'];
+
+    return modifyResponse(res, proxyRes.headers['content-encoding'], body => {
         if (body) {
-            body = Scope.mockResponse.data;
+            body = mock.data;
         }
         return body;
     });
 }
+
+const matched = _case => ({
+    on: () => matched(_case),
+    otherwise: () => _case,
+});
+
+const match = _case => ({  
+    on: (predicate: Predicate<any>, callBack: Function, args: any[]) => (predicate(_case) ? matched(callBack(...args)) : match(_case)),
+    otherwise: fn => fn(_case),
+});

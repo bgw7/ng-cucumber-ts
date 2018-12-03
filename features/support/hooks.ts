@@ -13,6 +13,7 @@ Before(async function(){
 
 After(async function() {
     await this.browser.close();
+    Scope.mockResponses.length = 0;
 })
 
 AfterAll(async function(){

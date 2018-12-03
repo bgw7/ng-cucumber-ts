@@ -5,11 +5,10 @@ import { expect } from 'chai';
 export async function openHomePage() {
     Scope.page = await Scope.browser.newPage();
     Scope.pageObject = new HomePage(Scope.page);
-    await Scope.pageObject.init();
-    expect(await Scope.pageObject.welcomeLogo).to.not.be.null;
+    await Scope.pageObject.loadHomePage();
 }
 
 export async function confirmLogo(expectedLogo: string) {
-    let actualLogo = await Scope.page.evaluate(element => element.alt, Scope.pageObject.welcomeLogo);
-    expect(actualLogo).to.equal(expectedLogo);
+    expect(await Scope.pageObject.getWelcomeLogo()).to.not.be.null;
+    expect(await Scope.pageObject.getWelcomeLogoAltText()).to.equal(expectedLogo);
 }
