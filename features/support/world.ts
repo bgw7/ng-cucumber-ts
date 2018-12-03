@@ -9,8 +9,10 @@ declare module 'cucumber' {
         browser: Browser
     }
 }
+
 setWorldConstructor(function(init) {
     this.driver = puppeteer;
     Scope.driver = this.driver;
-})
+});
+
 setDefaultTimeout(60 * 1000);
